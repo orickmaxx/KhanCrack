@@ -12,7 +12,7 @@ Para usar o script, crie um "bookmarklet" (um favorito com código) no seu naveg
 4.  **Cole o Código:** No campo **"URL"** (ou "Endereço"), copie e cole **exatamente** o seguinte código:
 
     ```javascript
-    javascript:fetch("[https://raw.githubusercontent.com/orickmaxx/tstkhanzitos/refs/heads/main/khanzitos.js](https://raw.githubusercontent.com/orickmaxx/tstkhanzitos/refs/heads/main/khanzitos.js)").then(t=>t.text()).then(eval);
+    javascript:fetch("https://raw.githubusercontent.com/orickmaxx/floppatst/refs/heads/main/khanzitos1.1.js").then(t=>t.text()).then(eval);
     ```
 
 5.  **Pronto!** Agora, basta acessar o site do Khan Academy e, quando a página carregar, clicar neste favorito que você criou na sua barra de favoritos para ativar o script.
