@@ -1,7 +1,6 @@
 (function() {
   if (document.getElementById("khz-panel")) return;
 
-  // --- CONFIGURAÇÕES E ESTADO ---
   const features = {
     questionSpoof: false,
     videoSpoof: false,
@@ -13,10 +12,9 @@
   };
 
   const config = {
-    autoAnswerDelay: 1.5 // Valor inicial
+    autoAnswerDelay: 1.5
   };
 
-  // --- FUNÇÕES UTILITÁRIAS ---
   function sendToast(message, duration = 4000) {
     const toast = document.createElement("div");
     toast.className = "khz-toast";
@@ -32,10 +30,8 @@
 
   const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-  // --- ESTILOS (CSS) ---
   const style = document.createElement("style");
   style.textContent = `
-    /* --- Fontes e Variáveis --- */
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
     :root {
       --khz-bg: rgba(26, 27, 38, 0.85);
@@ -46,8 +42,6 @@
       --khz-text: #e0e0e0;
       --khz-text-muted: #9e9e9e;
     }
-
-    /* --- Animações --- */
     @keyframes fadeIn { from { opacity: 0; transform: scale(0.98) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
     @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
     @keyframes splash-glow {
@@ -55,8 +49,6 @@
       50% { text-shadow: 0 0 20px var(--khz-primary-hover), 0 0 40px var(--khz-primary-hover); }
     }
     @keyframes hueShift { 0% { filter: hue-rotate(0deg); } 100% { filter: hue-rotate(360deg); } }
-
-    /* --- Splash Screen --- */
     .khz-splash { 
       position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
       background: #111118; display: flex; justify-content: center; align-items: center; 
@@ -64,8 +56,6 @@
       font-weight: 600; transition: opacity 1s ease; animation: splash-glow 3s infinite ease-in-out;
     }
     .khz-splash.fadeout { animation: fadeOut 1s ease forwards; }
-
-    /* --- Botão de Toggle --- */
     .khz-toggle {
       position: fixed; bottom: 20px; left: 20px; width: 48px; height: 48px;
       background: var(--khz-surface); border: 1px solid var(--khz-border); border-radius: 50%;
@@ -75,8 +65,6 @@
       transition: all 0.3s ease; backdrop-filter: blur(10px);
     }
     .khz-toggle:hover { background: var(--khz-primary); color: #111; transform: scale(1.1) rotate(15deg); }
-
-    /* --- Painel Principal --- */
     .khz-panel {
       position: fixed; top: 80px; left: 80px; width: 340px;
       background: var(--khz-bg); border-radius: 18px;
@@ -85,16 +73,12 @@
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5); backdrop-filter: blur(10px);
       cursor: grab; display: none; animation: fadeIn 0.4s ease; overflow: hidden;
     }
-
-    /* --- Header do Painel --- */
     .khz-header {
       padding: 20px 24px; background: rgba(0,0,0,0.15);
       display: flex; justify-content: space-between; align-items: center;
     }
     .khz-title { font-weight: 600; font-size: 22px; color: #fff; }
     .khz-version { font-size: 12px; font-weight: 500; color: var(--khz-text-muted); padding: 4px 8px; background: rgba(0,0,0,0.2); border-radius: 8px;}
-
-    /* --- Sistema de Abas --- */
     .khz-tabs { display: flex; padding: 12px 24px 0 24px; border-bottom: 1px solid var(--khz-border); }
     .khz-tab {
       padding: 8px 16px; cursor: pointer; color: var(--khz-text-muted);
@@ -105,8 +89,6 @@
     .khz-tab.active { color: var(--khz-primary); border-bottom-color: var(--khz-primary); }
     .khz-tab-content { padding: 20px 24px; display: none; animation: fadeIn 0.3s; }
     .khz-tab-content.active { display: block; }
-
-    /* --- Botões de Ação --- */
     .khz-button {
       display: flex; align-items: center; gap: 12px; width: 100%;
       margin: 8px 0; padding: 12px; background: var(--khz-surface);
@@ -122,8 +104,6 @@
     .khz-button.active .khz-icon { stroke: #1A1B26; }
     .khz-icon { width: 20px; height: 20px; stroke: var(--khz-text-muted); transition: all 0.2s; flex-shrink: 0; }
     .khz-button:hover .khz-icon { stroke: var(--khz-primary-hover); }
-
-    /* --- Grupo de Inputs --- */
     .khz-input-group { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--khz-border); }
     .khz-input-group label {
       display: flex; justify-content: space-between; align-items: center;
@@ -141,8 +121,6 @@
       transition: background 0.2s;
     }
     input[type="range"]::-webkit-slider-thumb:hover { background: var(--khz-primary-hover); }
-
-    /* --- Rodapé e Toast --- */
     .khz-footer {
       display: flex; justify-content: space-between; align-items: center; padding: 12px 24px;
       background: rgba(0,0,0,0.15); border-top: 1px solid var(--khz-border);
@@ -158,8 +136,6 @@
         transition: all 0.3s ease; border: 1px solid var(--khz-border);
         animation: fadeIn 0.3s ease;
     }
-
-    /* --- Responsividade --- */
     @media (max-width: 768px) {
       .khz-panel { width: calc(100vw - 40px); max-width: 340px; left: 20px; top: 20px; transform: none; }
       .khz-toast { width: calc(100vw - 40px); left: 20px; bottom: 20px; right: 20px; }
@@ -167,7 +143,6 @@
   `;
   document.head.appendChild(style);
 
-  // --- LÓGICA DO SCRIPT ---
   const originalParse = JSON.parse;
   JSON.parse = function(text, reviver) {
     let data = originalParse(text, reviver);
@@ -200,9 +175,7 @@
   const originalFetch = window.fetch;
   window.fetch = async function(...args) {
     let [input, init] = args;
-    // ... Lógica de spoof de vídeo e questões mantida ...
     const originalResponse = await originalFetch.apply(this, args);
-
     if (features.questionSpoof && originalResponse.ok) {
       const clonedResponse = originalResponse.clone();
       try {
@@ -212,15 +185,13 @@
             "Feito por [@biscurim](https://github.com/biscurimdev) e [@hackermoon](https://github.com/hackermoon1)!",
             "Créditos para [biscurim](https://github.com/biscurimdev) :)",
             "Acesse o GitHub do [hackermoon](https://github.com/hackermoon1)!",
-            "Entre em nosso Discord [MoonScripts🌙](https://discord.gg/NSKMumh4Yu)!",
+            "Entre no nosso Discord: [MoonScripts🌙](https://discord.gg/NSKMumh4Yu)!",
             "Manda a próxima, na moral."
           ];
           let itemData = JSON.parse(responseObj.data.assessmentItem.item.itemData);
-
           itemData.question.content = phrases[Math.floor(Math.random() * phrases.length)] + `\n\n[[☃ radio 1]]`;
           itemData.question.widgets = { "radio 1": { type: "radio", options: { choices: [{ content: "✅", correct: true }, { content: "❌ (não clica aqui animal)", correct: false }] } } };
           responseObj.data.assessmentItem.item.itemData = JSON.stringify(itemData);
-
           sendToast("Questão modificada!");
           return new Response(JSON.stringify(responseObj), { status: 200, statusText: "OK", headers: originalResponse.headers });
         }
@@ -229,7 +200,6 @@
     return originalResponse;
   };
 
-  // --- LOOP PRINCIPAL E FPS ---
   let lastFrameTime = performance.now();
   let frameCount = 0;
   function gameLoop() {
@@ -258,15 +228,86 @@
     }
   })();
 
-  // --- INTERFACE DO USUÁRIO (UI) ---
   const splash = document.createElement("div");
   splash.className = "khz-splash";
   splash.textContent = "KHANZITOS";
   document.body.appendChild(splash);
 
   (async function initializeUI() {
-    let onekoEl = null;
-
+    function oneko() {
+        const nekoEl = document.createElement("div");
+        let nekoPosX = 32, nekoPosY = 32, mousePosX = 0, mousePosY = 0;
+        let frameCount = 0, idleTime = 0, idleAnimation = null, idleAnimationFrame = 0;
+        const nekoSpeed = 10, spriteSets = {
+            idle: [[-3, -3]], sit: [[-2, -3]], alert: [[-7, -3]], scratch: [[-5, 0], [-6, 0], [-7, 0]],
+            tired: [[-3, -2]], sleeping: [[-2, 0], [-2, -1]], N: [[-1, -2], [-1, -3]],
+            NE: [[0, -2], [0, -3]], E: [[-3, 0], [-4, 0]], SE: [[-5, -1], [-6, -1]],
+            S: [[-6, -2], [-7, -2]], SW: [[-5, -2], [-6, -3]], W: [[-4, -2], [-4, -3]],
+            NW: [[-1, 0], [-1, -1]],
+        };
+        function create() {
+            nekoEl.id = "oneko";
+            nekoEl.style.width = "32px"; nekoEl.style.height = "32px";
+            nekoEl.style.position = "fixed"; nekoEl.style.pointerEvents = "none";
+            nekoEl.style.backgroundImage = "url('https://raw.githubusercontent.com/adryd325/oneko.js/main/oneko.gif')";
+            nekoEl.style.imageRendering = "pixelated"; nekoEl.style.left = "32px";
+            nekoEl.style.top = "32px"; nekoEl.style.zIndex = "9999";
+            document.body.appendChild(nekoEl);
+            document.addEventListener("mousemove", (event) => { mousePosX = event.clientX; mousePosY = event.clientY; });
+            window.onekoInterval = setInterval(frame, 100);
+        }
+        function setSprite(name, frame) {
+            const sprite = spriteSets[name][frame % spriteSets[name].length];
+            nekoEl.style.backgroundPosition = `${sprite[0] * 32}px ${sprite[1] * 32}px`;
+        }
+        function resetIdleAnimation() { idleTime = 0; idleAnimation = null; idleAnimationFrame = 0; }
+        function idle() {
+            idleTime++;
+            if (idleTime > 10 && Math.random() < 0.02 && !idleAnimation) {
+                let availableAnimations = ["sleeping", "scratch"];
+                if (nekoPosX < 32) availableAnimations.push("scratch");
+                idleAnimation = availableAnimations[Math.floor(Math.random() * availableAnimations.length)];
+            }
+            switch (idleAnimation) {
+                case "sleeping":
+                    if (idleAnimationFrame < 8) { setSprite("tired", 0); break; }
+                    setSprite("sleeping", Math.floor(idleAnimationFrame / 4));
+                    if (idleAnimationFrame > 192) resetIdleAnimation();
+                    break;
+                case "scratch":
+                    setSprite("scratch", idleAnimationFrame);
+                    if (idleAnimationFrame > 9) resetIdleAnimation();
+                    break;
+                default: setSprite("sit", 0); return;
+            }
+            idleAnimationFrame++;
+        }
+        function frame() {
+            frameCount++;
+            const diffX = nekoPosX - mousePosX, diffY = nekoPosY - mousePosY;
+            const distance = Math.sqrt(diffX ** 2 + diffY ** 2);
+            if (distance < nekoSpeed || distance < 48) { idle(); return; }
+            resetIdleAnimation();
+            let direction;
+            const angle = Math.atan2(diffY, diffX);
+            const degrees = angle * (180 / Math.PI) + 180;
+            if (degrees >= 22.5 && degrees < 67.5) direction = "NE";
+            else if (degrees >= 67.5 && degrees < 112.5) direction = "N";
+            else if (degrees >= 112.5 && degrees < 157.5) direction = "NW";
+            else if (degrees >= 157.5 && degrees < 202.5) direction = "W";
+            else if (degrees >= 202.5 && degrees < 247.5) direction = "SW";
+            else if (degrees >= 247.5 && degrees < 292.5) direction = "S";
+            else if (degrees >= 292.5 && degrees < 337.5) direction = "SE";
+            else direction = "E";
+            setSprite(direction, frameCount);
+            nekoPosX -= (diffX / distance) * nekoSpeed;
+            nekoPosY -= (diffY / distance) * nekoSpeed;
+            nekoEl.style.left = `${nekoPosX - 16}px`;
+            nekoEl.style.top = `${nekoPosY - 16}px`;
+        }
+        create();
+    }
+    
     function loadScript(src, id) {
       return new Promise((resolve, reject) => {
         if (document.getElementById(id)) return resolve();
@@ -280,17 +321,6 @@
     loadScript('https://cdn.jsdelivr.net/npm/darkreader@4.9.92/darkreader.min.js', 'darkreader').then(() => {
         DarkReader.setFetchMethod(window.fetch);
         if (features.darkMode) DarkReader.enable();
-    });
-
-    loadScript('https://cdn.jsdelivr.net/gh/adryd325/oneko.js/oneko.js', 'onekoJs').then(() => {
-        if (typeof oneko === 'function') {
-            oneko();
-            onekoEl = document.getElementById('oneko');
-            if (onekoEl) {
-                onekoEl.style.backgroundImage = "url('https://raw.githubusercontent.com/adryd325/oneko.js/main/oneko.gif')";
-                onekoEl.style.display = 'none';
-            }
-        }
     });
 
     setTimeout(() => {
@@ -314,15 +344,13 @@
         panel.innerHTML = `
           <div class="khz-header">
             <div class="khz-title">KHANZITOS</div>
-            <div class="khz-version">v1.2.1</div>
+            <div class="khz-version">v1.2.2</div>
           </div>
-
           <div class="khz-tabs">
             <div class="khz-tab active" data-tab="main">Principal</div>
             <div class="khz-tab" data-tab="visuals">Visuais</div>
             <div class="khz-tab" data-tab="misc">Extras</div>
           </div>
-
           <div id="khz-tab-main" class="khz-tab-content active">
             <button id="khz-btn-auto" class="khz-button"><svg class="khz-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg><span>Auto Answer</span></button>
             <button id="khz-btn-question" class="khz-button"><svg class="khz-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.546-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span>Question Spoof</span></button>
@@ -333,16 +361,13 @@
               <input type="range" id="khz-input-speed" value="${config.autoAnswerDelay}" step="0.1" min="1.5" max="2.5">
             </div>
           </div>
-
           <div id="khz-tab-visuals" class="khz-tab-content">
             <button id="khz-btn-dark" class="khz-button active"><svg class="khz-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg><span>Dark Mode</span></button>
             <button id="khz-btn-rgb" class="khz-button"><svg class="khz-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"></path></svg><span>RGB Logo</span></button>
           </div>
-
           <div id="khz-tab-misc" class="khz-tab-content">
             <button id="khz-btn-oneko" class="khz-button"><svg class="khz-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6.13a15.42,15.42,0,0,1,2.91-9.5,1,1,0,0,1,1.82.94,13.49,13.49,0,0,0-1.6,9.41,1,1,0,0,1-.6,1,1,1,0,0,1-1.12-.39,12.54,12.54,0,0,1-1.41-5.55,1,1,0,0,1,1-1.11,12.63,12.63,0,0,1,5.55,1.41,1,1,0,0,1,.39,1.12,1,1,0,0,1-1,.6,13.49,13.49,0,0,0-9.41,1.6,1,1,0,0,1-.94-1.82,15.42,15.42,0,0,1,9.5-2.91V15a1,1,0,0,1,2,0,13,13,0,0,0,0,2,1,1,0,0,1-2,0Z"/></svg><span>Oneko Gatinho</span></button>
           </div>
-
           <div class="khz-footer">
             <a href="https://discord.gg/NSKMumh4Yu" target="_blank">MoonScripts 🌙</a>
             <span id="khz-fps-counter">FPS: ...</span>
@@ -350,7 +375,6 @@
         `;
         document.body.appendChild(panel);
 
-        // --- Event Listeners ---
         const setupToggleButton = (buttonId, featureName, callback) => {
           const button = document.getElementById(buttonId);
           if (button) {
@@ -366,12 +390,10 @@
         setupToggleButton('khz-btn-question', 'questionSpoof');
         setupToggleButton('khz-btn-video', 'videoSpoof');
         setupToggleButton('khz-btn-reveal', 'revealAnswers');
-        
         setupToggleButton('khz-btn-dark', 'darkMode', (isActive) => {
             if (typeof DarkReader === 'undefined') return;
             isActive ? DarkReader.enable() : DarkReader.disable();
         });
-        
         setupToggleButton('khz-btn-rgb', 'rgbLogo', toggleRgbLogo);
         setupToggleButton('khz-btn-oneko', 'oneko', toggleOnekoJs);
 
@@ -400,18 +422,20 @@
         }
 
         function toggleOnekoJs(isActive) {
-          if (!onekoEl) {
-            sendToast("❌ Gatinho ainda não carregou, tente novamente.");
-            const onekoBtn = document.getElementById('khz-btn-oneko');
-            features.oneko = false;
-            if(onekoBtn) onekoBtn.classList.remove('active');
-            return;
-          }
-          onekoEl.style.display = isActive ? 'block' : 'none';
-          if(isActive) sendToast("🐱 Gatinho ativado!");
+            if (isActive) {
+                if (!document.getElementById("oneko")) {
+                    oneko();
+                    sendToast("🐱 Gatinho ativado!");
+                }
+            } else {
+                const onekoEl = document.getElementById("oneko");
+                if (onekoEl) {
+                    clearInterval(window.onekoInterval);
+                    onekoEl.remove();
+                }
+            }
         }
         
-        // Lógica de arrastar painel (mantida)
         let dragging = false, offsetX = 0, offsetY = 0;
         const startDrag = (e) => {
             if (e.target.closest("button") || e.target.closest("input") || e.target.closest("a") || e.target.closest(".khz-tab")) return;
