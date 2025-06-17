@@ -8,7 +8,7 @@
     autoAnswer: false,
     darkMode: true,
     rgbLogo: false,
-    oneko: false
+    oneko: true
   };
 
   const config = {
@@ -236,77 +236,132 @@
   (async function initializeUI() {
     function oneko() {
         const nekoEl = document.createElement("div");
-        let nekoPosX = 32, nekoPosY = 32, mousePosX = 0, mousePosY = 0;
-        let frameCount = 0, idleTime = 0, idleAnimation = null, idleAnimationFrame = 0;
-        const nekoSpeed = 10, spriteSets = {
-            idle: [[-3, -3]], sit: [[-2, -3]], alert: [[-7, -3]], scratch: [[-5, 0], [-6, 0], [-7, 0]],
-            tired: [[-3, -2]], sleeping: [[-2, 0], [-2, -1]], N: [[-1, -2], [-1, -3]],
-            NE: [[0, -2], [0, -3]], E: [[-3, 0], [-4, 0]], SE: [[-5, -1], [-6, -1]],
-            S: [[-6, -2], [-7, -2]], SW: [[-5, -2], [-6, -3]], W: [[-4, -2], [-4, -3]],
+        let nekoPosX = 32;
+        let nekoPosY = 32;
+        let mousePosX = 0;
+        let mousePosY = 0;
+        let frameCount = 0;
+        let idleTime = 0;
+        let idleAnimation = null;
+        let idleAnimationFrame = 0;
+        const nekoSpeed = 10;
+        const spriteSets = {
+            idle: [[-3, -3]],
+            alert: [[-7, -3]],
+            scratchSelf: [[-5, 0], [-6, 0], [-7, 0]],
+            scratchWall: [[0, 0], [0, -1]],
+            sleep: [[-2, 0], [-2, -1]],
+            sit: [[-2, -3]],
+            N: [[-1, -2], [-1, -3]],
+            NE: [[0, -2], [0, -3]],
+            E: [[-3, 0], [-4, 0]],
+            SE: [[-5, -1], [-6, -1]],
+            S: [[-6, -2], [-7, -2]],
+            SW: [[-5, -2], [-6, -3]],
+            W: [[-4, -2], [-4, -3]],
             NW: [[-1, 0], [-1, -1]],
         };
-        function create() {
+        function init() {
             nekoEl.id = "oneko";
-            nekoEl.style.width = "32px"; nekoEl.style.height = "32px";
-            nekoEl.style.position = "fixed"; nekoEl.style.pointerEvents = "none";
-            nekoEl.style.backgroundImage = "url('https://raw.githubusercontent.com/adryd325/oneko.js/main/oneko.gif')";
-            nekoEl.style.imageRendering = "pixelated"; nekoEl.style.left = "32px";
-            nekoEl.style.top = "32px"; nekoEl.style.zIndex = "9999";
+            nekoEl.style.width = "32px";
+            nekoEl.style.height = "32px";
+            nekoEl.style.position = "fixed";
+            nekoEl.style.pointerEvents = "none";
+            nekoEl.style.backgroundImage = "url('https://raw.githubusercontent.com/orickmaxx/KhanZitos-V1.1/main/oneko.gif')";
+            nekoEl.style.imageRendering = "pixelated";
+            nekoEl.style.left = "16px";
+            nekoEl.style.top = "16px";
+            nekoEl.style.zIndex = "9999";
             document.body.appendChild(nekoEl);
-            document.addEventListener("mousemove", (event) => { mousePosX = event.clientX; mousePosY = event.clientY; });
+            document.addEventListener("mousemove", (event) => {
+                mousePosX = event.clientX;
+                mousePosY = event.clientY;
+            });
             window.onekoInterval = setInterval(frame, 100);
         }
         function setSprite(name, frame) {
             const sprite = spriteSets[name][frame % spriteSets[name].length];
             nekoEl.style.backgroundPosition = `${sprite[0] * 32}px ${sprite[1] * 32}px`;
         }
-        function resetIdleAnimation() { idleTime = 0; idleAnimation = null; idleAnimationFrame = 0; }
+        function resetIdleAnimation() {
+            idleAnimation = null;
+            idleAnimationFrame = 0;
+        }
         function idle() {
-            idleTime++;
-            if (idleTime > 10 && Math.random() < 0.02 && !idleAnimation) {
-                let availableAnimations = ["sleeping", "scratch"];
-                if (nekoPosX < 32) availableAnimations.push("scratch");
+            idleTime += 1;
+            if (idleTime > 10 && Math.random() < 0.02 && idleAnimation == null) {
+                let availableAnimations = ["alert", "scratchSelf"];
+                if (nekoPosX < 32) {
+                    availableAnimations.push("scratchWall");
+                }
                 idleAnimation = availableAnimations[Math.floor(Math.random() * availableAnimations.length)];
             }
             switch (idleAnimation) {
-                case "sleeping":
-                    if (idleAnimationFrame < 8) { setSprite("tired", 0); break; }
-                    setSprite("sleeping", Math.floor(idleAnimationFrame / 4));
-                    if (idleAnimationFrame > 192) resetIdleAnimation();
+                case "alert":
+                    setSprite("alert", 0);
+                    if (idleAnimationFrame > 10) {
+                        resetIdleAnimation();
+                    }
                     break;
-                case "scratch":
-                    setSprite("scratch", idleAnimationFrame);
-                    if (idleAnimationFrame > 9) resetIdleAnimation();
+                case "scratchSelf":
+                    setSprite("scratchSelf", idleAnimationFrame);
+                    if (idleAnimationFrame > 9) {
+                        resetIdleAnimation();
+                    }
                     break;
-                default: setSprite("sit", 0); return;
+                case "scratchWall":
+                    setSprite("scratchWall", idleAnimationFrame);
+                    if (idleAnimationFrame > 9) {
+                        resetIdleAnimation();
+                    }
+                    break;
+                default:
+                    setSprite("sit", 0);
+                    return;
             }
-            idleAnimationFrame++;
+            idleAnimationFrame += 1;
         }
         function frame() {
-            frameCount++;
-            const diffX = nekoPosX - mousePosX, diffY = nekoPosY - mousePosY;
+            frameCount += 1;
+            const diffX = nekoPosX - mousePosX;
+            const diffY = nekoPosY - mousePosY;
             const distance = Math.sqrt(diffX ** 2 + diffY ** 2);
-            if (distance < nekoSpeed || distance < 48) { idle(); return; }
+            if (distance < nekoSpeed || distance < 48) {
+                idle();
+                return;
+            }
+            idleTime = 0;
             resetIdleAnimation();
             let direction;
-            const angle = Math.atan2(diffY, diffX);
-            const degrees = angle * (180 / Math.PI) + 180;
-            if (degrees >= 22.5 && degrees < 67.5) direction = "NE";
-            else if (degrees >= 67.5 && degrees < 112.5) direction = "N";
-            else if (degrees >= 112.5 && degrees < 157.5) direction = "NW";
-            else if (degrees >= 157.5 && degrees < 202.5) direction = "W";
-            else if (degrees >= 202.5 && degrees < 247.5) direction = "SW";
-            else if (degrees >= 247.5 && degrees < 292.5) direction = "S";
-            else if (degrees >= 292.5 && degrees < 337.5) direction = "SE";
-            else direction = "E";
+            const angle = (Math.atan2(diffY, diffX) + Math.PI) * (180 / Math.PI) + 90;
+            if (angle < 0) {
+                angle += 360;
+            }
+            if (angle > 337.5 || angle <= 22.5) {
+                direction = "N";
+            } else if (angle > 22.5 && angle <= 67.5) {
+                direction = "NE";
+            } else if (angle > 67.5 && angle <= 112.5) {
+                direction = "E";
+            } else if (angle > 112.5 && angle <= 157.5) {
+                direction = "SE";
+            } else if (angle > 157.5 && angle <= 202.5) {
+                direction = "S";
+            } else if (angle > 202.5 && angle <= 247.5) {
+                direction = "SW";
+            } else if (angle > 247.5 && angle <= 292.5) {
+                direction = "W";
+            } else if (angle > 292.5 && angle <= 337.5) {
+                direction = "NW";
+            }
             setSprite(direction, frameCount);
             nekoPosX -= (diffX / distance) * nekoSpeed;
             nekoPosY -= (diffY / distance) * nekoSpeed;
             nekoEl.style.left = `${nekoPosX - 16}px`;
             nekoEl.style.top = `${nekoPosY - 16}px`;
         }
-        create();
-    }
+        init();
+    };
     
     function loadScript(src, id) {
       return new Promise((resolve, reject) => {
@@ -344,7 +399,7 @@
         panel.innerHTML = `
           <div class="khz-header">
             <div class="khz-title">KHANZITOS</div>
-            <div class="khz-version">v1.2.2</div>
+            <div class="khz-version">v1.2.1</div>
           </div>
           <div class="khz-tabs">
             <div class="khz-tab active" data-tab="main">Principal</div>
