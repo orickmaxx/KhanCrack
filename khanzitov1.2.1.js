@@ -212,13 +212,13 @@
             "Feito por [@biscurim](https://github.com/biscurimdev) e [@hackermoon](https://github.com/hackermoon1)!",
             "Créditos para [biscurim](https://github.com/biscurimdev) :)",
             "Acesse o GitHub do [hackermoon](https://github.com/hackermoon1)!",
-            "✅",
+            "Entre em nosso Discord [MoonScripts🌙](https://discord.gg/NSKMumh4Yu)!",
             "Manda a próxima, na moral."
           ];
           let itemData = JSON.parse(responseObj.data.assessmentItem.item.itemData);
 
           itemData.question.content = phrases[Math.floor(Math.random() * phrases.length)] + `\n\n[[☃ radio 1]]`;
-          itemData.question.widgets = { "radio 1": { type: "radio", options: { choices: [{ content: "✅", correct: true }, { content: "❌", correct: false }] } } };
+          itemData.question.widgets = { "radio 1": { type: "radio", options: { choices: [{ content: "✅", correct: true }, { content: "❌ (não clica aqui animal)", correct: false }] } } };
           responseObj.data.assessmentItem.item.itemData = JSON.stringify(itemData);
 
           sendToast("Questão modificada!");
