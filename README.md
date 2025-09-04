@@ -1,4 +1,4 @@
-# MoonScripts🌙
+# MoonScripts™🌙
 
 Um bookmarklet para o Khan Academy, baseado no projeto Khanzitos, com melhorias e correções para a comunidade.
 
