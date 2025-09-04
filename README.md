@@ -34,4 +34,4 @@ Este projeto é uma modificação e aprimoramento do trabalho original de outros
 Este repositório e suas modificações são uma **sugestão de contribuição** para o servidor do Discord **MoonScripts**. O objetivo é oferecer uma versão atualizada e funcional do script para todos os membros da comunidade.
 
 **Junte-se a nós no Discord:**
-### [https://discord.gg/NSKMumh4Yu](https://discord.gg/NSKMumh4Yu)
+### [DISCORD Moon Scripts™](https://discord.gg/qtYnvFtnnm)
