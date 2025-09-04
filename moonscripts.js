@@ -398,8 +398,8 @@
         panel.className = "khz-panel";
         panel.innerHTML = `
           <div class="khz-header">
-            <div class="khz-title">KHANZITOS</div>
-            <div class="khz-version">v1.2.1</div>
+            <div class="khz-title">MoonScripts™</div>
+            <div class="khz-version">DESCONTINUADA</div>
           </div>
           <div class="khz-tabs">
             <div class="khz-tab active" data-tab="main">Principal</div>
