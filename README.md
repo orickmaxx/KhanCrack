@@ -21,9 +21,6 @@ Para usar o script, crie um "bookmarklet" (um favorito com código) no seu naveg
 
 Este projeto é uma modificação e aprimoramento do trabalho original de outros desenvolvedores.
 
-* **Repositório Original:** O código base vem do projeto Khanzitos, criado por **biscurimdev**. Você pode encontrar o repositório original aqui:
-    * [https://github.com/biscurimdev/Khanzitos/tree/main](https://github.com/biscurimdev/Khanzitos/tree/main)
-
 * **Direcionado aos usuários:**
     * `@hackermoon1`
 
