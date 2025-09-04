@@ -26,7 +26,6 @@ Este projeto é uma modificação e aprimoramento do trabalho original de outros
 
 * **Direcionado aos usuários:**
     * `@hackermoon1`
-    * `@biscurim`
 
 ---
 
