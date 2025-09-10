@@ -17,6 +17,10 @@ Para usar o script, crie um "bookmarklet" (um favorito com código) no seu naveg
 
 5.  **Pronto!** Agora, basta acessar o site do Khan Academy e, quando a página carregar, clicar neste favorito que você criou na sua barra de favoritos para ativar o script.
 
+### Tutorial Rápido
+
+![Tutorial MoonScripts](./tutorial.gif)
+
 ## Créditos e Agradecimentos
 
 Este projeto é uma modificação e aprimoramento do trabalho original de outros desenvolvedores.
